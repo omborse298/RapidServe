@@ -1,31 +1,49 @@
 import 'package:flutter/material.dart';
 
+import 'screens/splash_screen.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/auth/register_screen.dart';
+import 'screens/auth/forgot_password_screen.dart';
+
+import 'screens/customer/home_screen.dart';
+import 'screens/provider/provider_dashboard_screen.dart';
+import 'screens/admin/admin_dashboard_screen.dart';
+
+import 'utils/app_routes.dart';
+
 void main() {
-  runApp(const RapidServeApp());
+  runApp(const RapidServe());
 }
 
-class RapidServeApp extends StatelessWidget {
-  const RapidServeApp({super.key});
+class RapidServe extends StatelessWidget {
+  const RapidServe({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("RapidServe"),
-          centerTitle: true,
-        ),
-        body: const Center(
-          child: Text(
-            "Welcome to RapidServe",
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
+
+      initialRoute: AppRoutes.splash,
+
+      routes: {
+        AppRoutes.splash: (context) => const SplashScreen(),
+
+        AppRoutes.login: (context) => const LoginScreen(),
+
+        AppRoutes.register: (context) => RegisterScreen(),
+
+        AppRoutes.forgotPassword: (context) =>
+            ForgotPasswordScreen(),
+
+        AppRoutes.customerHome: (context) =>
+            HomeScreen(),
+
+        AppRoutes.providerDashboard: (context) =>
+            ProviderDashboardScreen(),
+
+        AppRoutes.adminDashboard: (context) =>
+            AdminDashboardScreen(),
+      },
     );
   }
 }
