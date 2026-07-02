@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/splash_screen.dart';
+import 'screens/customer/splashscreen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/auth/forgot_password_screen.dart';
@@ -26,9 +26,9 @@ class RapidServe extends StatelessWidget {
       initialRoute: AppRoutes.splash,
 
       routes: {
-        AppRoutes.splash: (context) => const SplashScreen(),
+        AppRoutes.splash: (context) => SplashScreen(),
 
-        AppRoutes.login: (context) => const LoginScreen(),
+        AppRoutes.login: (context) => LoginScreen(),
 
         AppRoutes.register: (context) => RegisterScreen(),
 
