@@ -15,7 +15,7 @@ class AppRoutes {
 }
 
 class RapidServeApp extends StatelessWidget {
-  const RapidServeApp({Key? key}) : super(key: key);
+  const RapidServeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,6 @@ class RapidServeApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       initialRoute: AppRoutes.splash,
-      // routes map is NOT const because closures are not const
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.onboarding: (context) => const OnboardingScreen(),
@@ -74,14 +73,14 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 140,
               height: 140,
               child: Image.asset(
-                'assets/logo.png',
+                'assets/images/logo.png',
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(18),
-                      boxShadow: [BoxShadow(color: blue.withOpacity(0.08), blurRadius: 14, offset: const Offset(0, 8))],
+                      boxShadow: [BoxShadow(color: blue.withValues(), blurRadius: 14, offset: const Offset(0, 8))],
                     ),
                     child: Center(child: Text('R', style: TextStyle(fontSize: 72, fontWeight: FontWeight.w900, color: blue))),
                   );
@@ -136,7 +135,7 @@ class OnboardingScreen extends StatelessWidget {
               child: Opacity(
                 opacity: 0.12,
                 child: Image.asset(
-                  'assets/city.png',
+                  'assets/images/city.png',
                   height: size.height * 0.32,
                   fit: BoxFit.cover,
                   errorBuilder: (c, e, st) => const SizedBox.shrink(),
@@ -185,7 +184,7 @@ class OnboardingScreen extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(40), boxShadow: [BoxShadow(color: blue1.withOpacity(0.08), blurRadius: 10, offset: const Offset(0, 6))]),
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(40), boxShadow: [BoxShadow(color: blue1.withValues(), blurRadius: 10, offset: const Offset(0, 6))]),
                           child: const Icon(Icons.timer, color: blue1, size: 28),
                         ),
                         const SizedBox(width: 12),
@@ -247,7 +246,7 @@ class OnboardingScreen extends StatelessWidget {
                             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                               SizedBox(
                                 height: size.height * 0.22,
-                                child: Image.asset('assets/runner.png', fit: BoxFit.contain, errorBuilder: (c, e, st) => const Icon(Icons.directions_run, size: 90, color: Colors.white70)),
+                                child: Image.asset('assets/images/runner.png', fit: BoxFit.contain, errorBuilder: (c, e, st) => const Icon(Icons.directions_run, size: 90, color: Colors.white70)),
                               ),
                             ]),
                           ),
@@ -280,24 +279,75 @@ class OnboardingScreen extends StatelessWidget {
 
 /// Logo block (fallback if asset missing)
 class LogoBlock extends StatelessWidget {
-  const LogoBlock({Key? key}) : super(key: key);
+  const LogoBlock({super.key});
 
   @override
   Widget build(BuildContext context) {
     final blue = const Color(0xFF0B63E6);
-    return Column(children: [
-      SizedBox(
-        width: 150,
-        height: 150,
-        child: Stack(alignment: Alignment.center, children: [
-          Container(width: 150, height: 150, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: blue.withOpacity(0.06), blurRadius: 18, offset: const Offset(0, 10))])),
-          Column(mainAxisSize: MainAxisSize.min, children: [
-            Text('R', style: GoogleFonts.poppins(fontSize: 86, fontWeight: FontWeight.w800, color: blue, shadows: [Shadow(color: blue.withOpacity(0.15), blurRadius: 12, offset: const Offset(0, 6))])),
-            Container(width: 20, height: 20, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(3), boxShadow: [BoxShadow(color: Colors.blue.shade50, blurRadius: 6, offset: const Offset(0, 2))]))
-          ])
-        ]),
-      )
-    ]);
+
+    return Column(
+      children: [
+        SizedBox(
+          width: 150,
+          height: 150,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: blue.withValues(), // ⚠️ FIXED HERE
+                      blurRadius: 18,
+                      offset: const Offset(0, 10),
+                    )
+                  ],
+                ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'R',
+                    style: GoogleFonts.poppins(
+                      fontSize: 86,
+                      fontWeight: FontWeight.w800,
+                      color: blue,
+                      shadows: [
+                        Shadow(
+                          color: blue.withValues(), // ⚠️ FIXED HERE
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(3),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.shade50,
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+      ],
+    );
   }
 }
 
@@ -306,15 +356,21 @@ class FeatureIcon extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  const FeatureIcon({Key? key, required this.icon, required this.label}) : super(key: key);
+  const FeatureIcon({
+    super.key,
+    required this.icon,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
-      Container(width: 78, height: 78, decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.blue.shade50, blurRadius: 16, offset: const Offset(0, 6))]), child: Center(child: Icon(icon, color: const Color(0xFF0B63E6), size: 32))),
-      const SizedBox(height: 8),
-      Text(label, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 11, color: Colors.blueGrey, fontWeight: FontWeight.w600, height: 1.15)),
-    ]);
+    return Column(
+      children: [
+        Icon(icon),
+        const SizedBox(height: 8),
+        Text(label, textAlign: TextAlign.center),
+      ],
+    );
   }
 }
 
