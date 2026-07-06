@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/customer/splash_screen.dart';
+import 'utils/app_routes.dart';
 
 void main() {
   runApp(const RapidServeApp());
@@ -10,9 +10,11 @@ class RapidServeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      initialRoute: AppRoutes.splash,
+      routes: AppRoutes.routes,
     );
+
   }
 }
