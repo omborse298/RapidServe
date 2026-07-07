@@ -1,24 +1,6 @@
-// name=lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() => runApp(const RapidServeLoginApp());
-
-class RapidServeLoginApp extends StatelessWidget {
-  const RapidServeLoginApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Rapid Serve Login',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(),
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: const LoginScreen(),
-    );
-  }
-}
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -57,22 +39,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Logo (use asset if present)
                   SizedBox(
-                    height: 140,
+                    height: 195,
                     child: Center(
                       child: Image.asset(
-                        'assets/logo.png',
-                        height: 120,
+                        'assets/images/login_logo.png',
+                        width: 175,
                         fit: BoxFit.contain,
-                        errorBuilder: (c, e, st) => Text('RAPID\nSERVE',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 36,
-                                fontWeight: FontWeight.w800,
-                                color: const Color(0xFF0B63E6))),
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.image_not_supported,
+                            size: 80,
+                            color: Colors.grey,
+                          );
+                        },
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 12),
 
                   // Welcome texts

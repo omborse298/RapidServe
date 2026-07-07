@@ -7,13 +7,13 @@ import '../screens/customer/home_screen.dart';
 
 class AppRoutes {
   static const String splash = "/";
-  static const String loginscreen = "/login";
+  static const String login = "/login";
   static const String register = "/register";
   static const customerHome = "/customerHome";
 
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => const SplashScreen(),
-    loginscreen: (context) => const LoginScreen(),
+    login: (context) => const LoginScreen(),
     register: (context) => const RegisterScreen(),
     customerHome: (context) => const HomeScreen(),
   };
