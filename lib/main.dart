@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'utils/app_routes.dart';
+import 'screens/provider/provider_dashboard_screen.dart';
 
 void main() {
   runApp(const RapidServeApp());
@@ -10,11 +10,9 @@ class RapidServeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.splash,
-      routes: AppRoutes.routes,
+      home: ProviderDashboardScreen(),
     );
-
   }
 }
