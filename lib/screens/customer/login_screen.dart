@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:rapidserve/services/auth_service.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -11,9 +11,45 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isUserSelected = true;
   bool _obscure = true;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final AuthService _authService = AuthService();
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    Future<void> login() async {
+      setState(() {
+        isLoading = true;
+      });
+
+      String? result = await _authService.loginUser(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (result == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Login Successful"),
+          ),
+        );
+
+        // Navigation will be added later
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result),
+          ),
+        );
+      }
+    }
     final w = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Stack(
@@ -126,26 +162,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 22),
 
-                  // Phone field
+                  // Email field
                   _buildInputField(
-                    prefix: const Icon(Icons.phone, color: Color(0xFF0B63E6)),
-                    hint: 'Phone Number',
-                    keyboardType: TextInputType.phone,
+                    controller: emailController,
+                    prefix: const Icon(
+                      Icons.email,
+                      color: Color(0xFF0B63E6),
+                    ),
+                    hint: 'Email Address',
+                    keyboardType: TextInputType.emailAddress,
                   ),
 
                   const SizedBox(height: 16),
 
                   // Password field
                   _buildInputField(
-                    prefix: const Icon(Icons.lock, color: Color(0xFF0B63E6)),
+                    controller: passwordController,
+                    prefix: const Icon(
+                      Icons.lock,
+                      color: Color(0xFF0B63E6),
+                    ),
                     hint: 'Password',
                     obscure: _obscure,
                     suffix: GestureDetector(
                       onTap: () => setState(() => _obscure = !_obscure),
-                      child: Icon(_obscure ? Icons.visibility_off : Icons.visibility, color: Colors.grey.shade500),
+                      child: Icon(
+                        _obscure ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.grey.shade500,
+                      ),
                     ),
                   ),
-
                   const SizedBox(height: 8),
 
                   // Forgot password aligned right
@@ -161,22 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 10),
 
                   // Login button (blue rounded)
-                  SizedBox(
-                    width: double.infinity,
-                    height: 54,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0B63E6),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        elevation: 6,
-                        shadowColor: const Color(0xFF0B63E6).withOpacity(0.3),
-                      ),
-                      child: const Text('Login', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    ),
-                  ),
 
-                  const SizedBox(height: 18),
 
                   // OR divider
                   Row(
@@ -192,22 +223,40 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 18),
 
-                  // Login with OTP
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.phone_android, color: Color(0xFF0B63E6)),
-                      label: Text('Login with OTP', style: TextStyle(color: const Color(0xFF0B63E6), fontWeight: FontWeight.w600)),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        side: const BorderSide(color: Color(0xFF0B63E6), width: 1.6),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      // Login button (blue rounded)
+                      SizedBox(
+                        width: double.infinity,
+                        height: 54,
+                        child: ElevatedButton(
+                          onPressed: login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0B63E6),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 6,
+                            shadowColor: const Color(0xFF0B63E6).withOpacity(0.3),
+                          ),
+                          child: isLoading
+                              ? const SizedBox(
+                            height: 22,
+                            width: 22,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                              : const Text(
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 22),
+                      const SizedBox(height: 18),
 
                   // Sign up row
                   Row(
@@ -247,6 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildInputField({
+    required TextEditingController controller,
     required Widget prefix,
     Widget? suffix,
     required String hint,
@@ -261,6 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
         boxShadow: [BoxShadow(color: Colors.blue.shade50.withOpacity(0.8), blurRadius: 8, offset: const Offset(0, 6))],
       ),
       child: TextFormField(
+        controller: controller,
         keyboardType: keyboardType,
         obscureText: obscure,
         decoration: InputDecoration(
