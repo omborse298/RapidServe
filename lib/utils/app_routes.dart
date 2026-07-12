@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../screens/customer/splash_screen.dart';
 import '../screens/customer/login_screen.dart';
-import '../screens/auth/register_screen.dart';
+// Change this import inside lib/utils/app_routes.dart to point to the correct file:
+import 'package:rapidserve/screens/customer/register_screen.dart'; // <-- Point this to where your form code is!
 import '../screens/customer/home_screen.dart';
 
 class AppRoutes {
