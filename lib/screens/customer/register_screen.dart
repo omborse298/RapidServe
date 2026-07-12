@@ -394,18 +394,11 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
 /// Simple white rounded input card used for each field
 class _InputCard extends StatelessWidget {
   final Widget child;
-
   const _InputCard({required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.04),
-                blurRadius: 12,
-                offset: const Offset(0, 6))
           ]),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       child: child,
