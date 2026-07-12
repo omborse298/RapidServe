@@ -353,29 +353,17 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
 
                         const SizedBox(height: 18),
 
-                        // Login row
+                        // Login row (now navigates to LoginScreen)
                         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                           Text('Already have an account? ', style: TextStyle(color: Colors.grey.shade700)),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                              );
+                              // Navigate to the login page
+                              Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
                             },
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Color(0xFF1967F2),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                            child: const Text('Login', style: TextStyle(color: Color(0xFF1967F2), fontWeight: FontWeight.w700)),
                           ),
-                        ],
-                        ),
-
+                        ]),
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -399,7 +387,9 @@ class _InputCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-          ]),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white, boxShadow: [
+        BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 12, offset: const Offset(0, 6))
+      ]),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       child: child,
     );
