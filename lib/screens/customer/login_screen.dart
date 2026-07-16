@@ -1,20 +1,8 @@
-// name=lib/main.dart
+// name=lib/screens/customer/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:rapidserve/services/auth_service.dart';
-import 'package:rapidserve/screens/customer/register_screen.dart'; // ✅ IMPORTANT
-
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
-    );
-  }
-}
+import 'package:rapidserve/utils/app_routes.dart';
+import 'package:rapidserve/screens/customer/register_screen.dart'; // <-- MAKE SURE IT SAYS AUTH HERE
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,10 +19,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   final AuthService _authService = AuthService();
-
   bool isLoading = false;
 
   Future<void> login() async {
+    if (emailController.text.trim().isEmpty || passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields")),
+      );
+      return;
+    }
+
     setState(() => isLoading = true);
 
     String? result = await _authService.loginUser(
@@ -43,13 +37,19 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (!mounted) return;
-
     setState(() => isLoading = false);
 
     if (result == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Login Successful")),
       );
+
+      // Route dynamically using your AppRoutes naming convention
+      if (isUserSelected) {
+        // Navigator.pushReplacementNamed(context, AppRoutes.customerHome);
+      } else {
+        // Navigator.pushReplacementNamed(context, AppRoutes.providerHome);
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result)),
@@ -67,13 +67,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Keep a top wave if you like; remove bottom wave per your request.
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-
-          /// TOP WAVE (unchanged)
-          Positioned.fill(
+          /// TOP WAVE
+          Positioned(
             top: 0,
+            left: 0,
+            right: 0,
             child: SizedBox(
               height: 260,
               child: CustomPaint(
@@ -90,12 +91,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 12),
 
-                  /// HERO IMAGE (replaces previous small logo)
+                  /// HERO IMAGE
                   SizedBox(
                     height: 220,
                     width: double.infinity,
                     child: Image.asset(
-                      'assets/images/login_hero.png', // <-- place your new image here
+                      'assets/images/logo2.png',
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return const Center(
@@ -105,51 +106,44 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 8),
-
-                  // NOTE: "Welcome Back" title and subtitle removed per request.
-
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
 
                   /// USER / PROVIDER TOGGLE
                   Container(
-                    height: 58,
+                    height: 59,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30), // Fully rounded outer capsule
                       border: Border.all(color: Colors.blue.shade50, width: 1.8),
                     ),
+                    padding: const EdgeInsets.all(4), // Creates the necessary space around the independent pill fields
                     child: Row(
                       children: [
+                        // --- USER TAB ---
                         Expanded(
                           child: GestureDetector(
                             onTap: () => setState(() => isUserSelected = true),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 220),
                               decoration: BoxDecoration(
-                                color: isUserSelected
-                                    ? const Color(0xFF0B63E6)
-                                    : Colors.white,
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(0),
-                                  bottomLeft: Radius.circular(0),
-                                ),
+                                // Fully rounds ALL 4 corners for the complete capsule look you drew
+                                color: isUserSelected ? const Color(0xFF0B63E6) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(30),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.person,
-                                      color: isUserSelected
-                                          ? Colors.white
-                                          : const Color(0xFF0B63E6)),
-                                  const SizedBox(width: 10),
+                                  Icon(
+                                    Icons.person,
+                                    color: isUserSelected ? Colors.white : const Color(0xFF0B63E6),
+                                  ),
+                                  const SizedBox(width: 8),
                                   Text(
                                     'User',
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      color: isUserSelected
-                                          ? Colors.white
-                                          : const Color(0xFF0B63E6),
+                                      color: isUserSelected ? Colors.white : const Color(0xFF0B63E6),
                                     ),
                                   ),
                                 ],
@@ -158,39 +152,31 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
+                        // --- PROVIDER TAB ---
                         Expanded(
                           child: GestureDetector(
                             onTap: () => setState(() => isUserSelected = false),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 220),
                               decoration: BoxDecoration(
-                                color: isUserSelected
-                                    ? Colors.white
-                                    : const Color(0xFF0B63E6),
-                                borderRadius: const BorderRadius.only(
-                                  topRight: Radius.circular(12),
-                                  bottomRight: Radius.circular(12),
-                                ),
+                                // Fully rounds ALL 4 corners for the complete capsule look you drew
+                                color: !isUserSelected ? const Color(0xFF0B63E6) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(30),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.handyman,
-                                      color: isUserSelected
-                                          ? const Color(0xFF0B63E6)
-                                          : Colors.white),
-                                  const SizedBox(width: 10),
-                                  Flexible(
-                                    child: Text(
-                                      'Service Provider',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: isUserSelected
-                                            ? const Color(0xFF0B63E6)
-                                            : Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                  Icon(
+                                    Icons.handyman,
+                                    color: !isUserSelected ? Colors.white : const Color(0xFF0B63E6),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Provider',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: !isUserSelected ? Colors.white : const Color(0xFF0B63E6),
                                     ),
                                   ),
                                 ],
@@ -202,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 24),
 
                   /// EMAIL FIELD
                   _buildInputField(
@@ -238,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 14,
                           color: Color(0xFF0B63E6),
                         ),
                       ),
@@ -252,20 +238,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       Expanded(child: Divider()),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('or'),
+                        child: Text('or', style: TextStyle(color: Colors.grey)),
                       ),
                       Expanded(child: Divider()),
                     ],
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 20),
 
                   /// LOGIN BUTTON
                   SizedBox(
                     width: double.infinity,
                     height: 54,
                     child: ElevatedButton(
-                      onPressed: login,
+                      onPressed: isLoading ? null : login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0B63E6),
                         shape: RoundedRectangleBorder(
@@ -273,7 +259,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       child: isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
+                          ? const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.5,
+                        ),
+                      )
                           : const Text(
                         'Login',
                         style: TextStyle(
@@ -285,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 24),
 
                   /// SIGN UP NAVIGATION
                   Row(
@@ -299,15 +292,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-
                       InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterScreen(),
-                            ),
-                          );
+                          Navigator.pushNamed(context, AppRoutes.register);
                         },
                         child: const Text(
                           'Sign Up',
@@ -320,14 +307,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-
-                  const SizedBox(height: 120),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
           ),
-
-          /// BOTTOM WAVE REMOVED (per request)
         ],
       ),
     );
@@ -356,13 +340,13 @@ class _LoginScreenState extends State<LoginScreen> {
           suffixIcon: suffix,
           hintText: hint,
           border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(vertical: 14),
         ),
       ),
     );
   }
 }
 
-/// PAINTER(S) (top wave kept)
 class _TopWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
