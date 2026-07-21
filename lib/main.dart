@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'utils/app_routes.dart';
 
 void main() {
-  runApp(const RapidServeApp());
+  runApp(
+    const ProviderScope(
+      child: RapidServeApp(),
+    ),
+  );
 }
 
 class RapidServeApp extends StatelessWidget {
@@ -12,7 +18,10 @@ class RapidServeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.splash,
+      title: 'Rapid Serve',
+
+      initialRoute: AppRoutes.activeJobs,
+
       routes: AppRoutes.routes,
     );
   }
