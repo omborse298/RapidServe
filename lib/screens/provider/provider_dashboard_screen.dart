@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../utils/app_routes.dart';
 
 class ProviderDashboardScreen extends StatefulWidget {
   const ProviderDashboardScreen({super.key});
@@ -1064,6 +1065,10 @@ bottomNavigationBar: _buildBottomNavigation(),
         setState(() {
           selectedIndex = index;
         });
+
+        if (index == 1) {
+          Navigator.pushNamed(context, AppRoutes.providerRequests);
+        }
       },
       items: const [
         BottomNavigationBarItem(
